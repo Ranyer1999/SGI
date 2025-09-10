@@ -1,0 +1,171 @@
+/* ::: Script Criação da Base SGI::::
+09/09/2025 - Kelrison Coelho
+
+OBS: Necessário ajustes de padronização de nomes de PK e edição do script para execução em base de desenvolvimento
+
+
+*/
+
+CREATE database sgi
+
+use sgi
+
+CREATE TABLE professor 
+( 
+ idprofessor INT PRIMARY KEY AUTO_INCREMENT,  
+ nome_prof VARCHAR(150) NOT NULL,
+ cpf CHAR(14) UNIQUE NOT NULL,
+ telefone VARCHAR(15),
+ dt_nascimento DATE,
+ email_prof VARCHAR(100) UNIQUE,
+ idusuario INT NOT NULL
+ ); 
+
+CREATE TABLE coordenador 
+( 
+ idcoordenador INT PRIMARY KEY AUTO_INCREMENT, 
+ idusuario INT NOT NULL 
+ ); 
+
+CREATE TABLE administrador 
+( 
+ idadmin INT PRIMARY KEY AUTO_INCREMENT,  
+ idusuario INT NOT NULL 
+);
+
+CREATE TABLE usuario 
+( 
+ idusuario INT PRIMARY KEY AUTO_INCREMENT,  
+ idgrupo_acesso INT NOT NULL,  
+ user_login VARCHAR(100) UNIQUE NOT NULL,
+ senha VARCHAR(12) NOT NULL,
+ dt_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+); 
+
+CREATE TABLE grupo_acesso 
+( 
+ idgrupo_acesso INT PRIMARY KEY AUTO_INCREMENT,
+ nome_grupo VARCHAR(50) NOT NULL,  
+ desc_grupo varchar(255)
+); 
+
+CREATE TABLE curso 
+( 
+ idcurso INT PRIMARY KEY AUTO_INCREMENT,  
+ nome_curso VARCHAR(150) NOT NULL,
+ tipo_curso ENUM('Técnico', 'Qualificação', 'Especialização') NOT NULL,
+ cargahr_curso INT NOT NULL,
+ idstatus_curso INT NOT NULL
+); 
+
+
+CREATE TABLE grade_curricular 
+( 
+ idgrade_curricular INT PRIMARY KEY AUTO_INCREMENT,  
+ status_grade ENUM('Ativo', 'Inativo') NOT NULL,
+ dt_vigencia DATE NOT NULL,
+ idcomponente INT NOT NULL,
+ idcurso INT NOT NULL
+); 
+
+CREATE TABLE componente 
+( 
+ idcomponente INT PRIMARY KEY AUTO_INCREMENT,
+ nome_componente VARCHAR(100) NOT NULL,
+ cargahr_comp INT NOT NULL,
+ comp_socioemocional TEXT,
+ base_conhecimentos TEXT,
+ habilidades TEXT
+); 
+
+CREATE TABLE turma 
+( 
+ idturma INT PRIMARY KEY AUTO_INCREMENT,
+ nome_turma VARCHAR(100),
+ dt_inicio DATE,
+ dt_fim DATE, 
+ idstatus_turma INT NOT NULL,  
+ idturno INT NOT NULL,   
+ idgrade_curricular INT NOT NULL,  
+ idcurso INT NOT NULL
+); 
+
+CREATE TABLE turno 
+( 
+ idturno INT PRIMARY KEY AUTO_INCREMENT,
+ nome_turno ENUM('Matutino', 'Vespertino', 'Noturno') NOT NULL 
+); 
+
+CREATE TABLE status_curso 
+( 
+ idstatus_curso INT PRIMARY KEY AUTO_INCREMENT,
+ nome_stcurso ENUM('Ativo', 'Inativo', 'Em elaboração') NOT NULL  
+); 
+
+CREATE TABLE status_turma 
+( 
+ idstatus_turma INT PRIMARY KEY AUTO_INCREMENT,
+ nome_stturma ENUM('Aberta', 'Concluída', 'Cancelada') NOT NULL
+); 
+
+
+
+CREATE TABLE formacao_professor 
+( 
+ idformacao INT PRIMARY KEY AUTO_INCREMENT,
+ nome_formacao VARCHAR(150) NOT NULL,
+ tipo_formacao ENUM('Graduação', 'Especialização', 'Mestrado', 'Doutorado') NOT NULL,
+ instituicao VARCHAR(150) NOT NULL,
+ ano_conclusao YEAR NOT NULL,
+ cargahr_formacao INT NOT NULL,
+ idprofessor INT NOT NULL
+); 
+
+CREATE TABLE alocacao 
+( 
+ idalocacao INT PRIMARY KEY AUTO_INCREMENT,
+ dt_alocacao DATE NOT NULL,  
+ idstatus_alocacao INT NOT NULL,
+ idprofessor INT NOT NULL, 
+ idturma INT NOT NULL
+); 
+
+CREATE TABLE status_alocacao 
+( 
+ idstatus_alocacao INT PRIMARY KEY AUTO_INCREMENT,
+ nome_stalocacao ENUM('Ativa', 'Encerrada', 'Cancelada') NOT NULL  
+); 
+
+CREATE TABLE candidatura 
+( 
+ idcandidatura INT PRIMARY KEY AUTO_INCREMENT,
+ dt_candidatura DATE NOT NULL,
+ hora_candidatura TIME NOT NULL,
+ idprofessor INT NOT NULL,
+ idstatus_candidatura INT NOT NULL,
+ idturma INT NOT NULL
+); 
+
+CREATE TABLE status_candidatura 
+( 
+ idstatus_candidatura INT PRIMARY KEY AUTO_INCREMENT,  
+ nome_statuscand ENUM('Pendente', 'Aceita', 'Recusada') NOT NULL  
+); 
+
+ALTER TABLE professor ADD FOREIGN KEY(idusuario) REFERENCES usuario (idusuario);
+ALTER TABLE coordenador ADD FOREIGN KEY(idusuario) REFERENCES usuario (idusuario);
+ALTER TABLE administrador ADD FOREIGN KEY(idusuario) REFERENCES usuario (idusuario);
+ALTER TABLE usuario ADD FOREIGN KEY(idgrupo_acesso) REFERENCES grupo_acesso (idgrupo_acesso);
+ALTER TABLE curso ADD FOREIGN KEY(idstatus_curso) REFERENCES status_curso (idstatus_curso);
+ALTER TABLE grade_curricular ADD FOREIGN KEY(idcomponente) REFERENCES componente (idcomponente);
+ALTER TABLE grade_curricular ADD FOREIGN KEY(idcurso) REFERENCES curso (idcurso);
+ALTER TABLE turma ADD FOREIGN KEY(idstatus_turma) REFERENCES status_turma (idstatus_turma);
+ALTER TABLE turma ADD FOREIGN KEY(idturno) REFERENCES turno (idturno);
+ALTER TABLE turma ADD FOREIGN KEY(idgrade_curricular) REFERENCES grade_curricular (idgrade_curricular);
+ALTER TABLE turma ADD FOREIGN KEY(idcurso) REFERENCES curso (idcurso);
+ALTER TABLE formacao_professor ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofessor);
+ALTER TABLE alocacao ADD FOREIGN KEY(idstatus_alocacao) REFERENCES status_alocacao (idstatus_alocacao);
+ALTER TABLE alocacao ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofessor);
+ALTER TABLE alocacao ADD FOREIGN KEY(idturma) REFERENCES turma (idturma);
+ALTER TABLE candidatura ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofessor);
+ALTER TABLE candidatura ADD FOREIGN KEY(idstatus_candidatura) REFERENCES status_candidatura (idstatus_candidatura);
