@@ -171,3 +171,17 @@ ALTER TABLE alocacao ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofes
 ALTER TABLE alocacao ADD FOREIGN KEY(idturma) REFERENCES turma (idturma);
 ALTER TABLE candidatura ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofessor);
 ALTER TABLE candidatura ADD FOREIGN KEY(idstatus_candidatura) REFERENCES status_candidatura (idstatus_candidatura);
+
+-- Inserir grupo de acesso específico para coordenação (se não existir)
+INSERT INTO grupo_acesso (nome_grupo, desc_grupo) 
+SELECT 'Coordenacao', 'Acesso exclusivo à área de coordenação'
+WHERE NOT EXISTS (SELECT 1 FROM grupo_acesso WHERE nome_grupo = 'Coordenacao');
+
+-- Inserir usuário com acesso exclusivo à coordenação
+INSERT INTO usuario (idgrupo_acesso, user_login, senha, dt_criacao) 
+VALUES (
+    (SELECT idgrupo_acesso FROM grupo_acesso WHERE nome_grupo = 'Coordenacao'), 
+    'coord@dominio.com', 
+    'senha_coord', 
+    NOW()
+);
