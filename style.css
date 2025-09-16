@@ -2,6 +2,26 @@
   width: 150px;
   height: 60px;
 }
+#sair {
+  position: absolute;
+  right: 10px;
+}
+.dados-form {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  text-align:left;
+}
+.perfil-form {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  text-align:left;
+}
 header {
 }
 .menu {
@@ -36,3 +56,5 @@ ul {
   margin: 100px auto;
   text-align: center;
 }
+
+
