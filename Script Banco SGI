@@ -185,3 +185,9 @@ VALUES (
     'senha_coord', 
     NOW()
 );
+
+
+INSERT INTO grupo_acesso (nome_grupo, desc_grupo) VALUES
+('Administradores', 'Acesso total ao sistema'),
+('Coordenacao', 'Acesso às funcionalidades de coordenação'),
+('Professores', 'Grupo de acesso para professores');
