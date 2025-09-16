@@ -127,7 +127,9 @@ CREATE TABLE alocacao
  dt_alocacao DATE NOT NULL,  
  idstatus_alocacao INT NOT NULL,
  idprofessor INT NOT NULL, 
- idturma INT NOT NULL
+ idturma INT NOT NULL,
+ periodo_inicio DATE,
+ periodo_fim DATE
 ); 
 
 CREATE TABLE status_alocacao 
