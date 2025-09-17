@@ -10,38 +10,7 @@ CREATE database sgi
 
 use sgi
 
-CREATE TABLE professor 
-( 
- idprofessor INT PRIMARY KEY AUTO_INCREMENT,  
- nome_prof VARCHAR(150) NOT NULL,
- cpf CHAR(14) UNIQUE NOT NULL,
- telefone VARCHAR(15),
- dt_nascimento DATE,
- email_prof VARCHAR(100) UNIQUE,
- idusuario INT NOT NULL
- ); 
-
-CREATE TABLE coordenador 
-( 
- idcoordenador INT PRIMARY KEY AUTO_INCREMENT, 
- idusuario INT NOT NULL 
- ); 
-
-CREATE TABLE administrador 
-( 
- idadmin INT PRIMARY KEY AUTO_INCREMENT,  
- idusuario INT NOT NULL 
-);
-
-CREATE TABLE usuario 
-( 
- idusuario INT PRIMARY KEY AUTO_INCREMENT,  
- idgrupo_acesso INT NOT NULL,  
- user_login VARCHAR(100) UNIQUE NOT NULL,
- senha VARCHAR(12) NOT NULL,
- dt_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-); 
-
+-- Primeiro: criar tabelas independentes (sem chaves estrangeiras)
 CREATE TABLE grupo_acesso 
 ( 
  idgrupo_acesso INT PRIMARY KEY AUTO_INCREMENT,
@@ -49,23 +18,22 @@ CREATE TABLE grupo_acesso
  desc_grupo varchar(255)
 ); 
 
-CREATE TABLE curso 
+CREATE TABLE status_curso 
 ( 
- idcurso INT PRIMARY KEY AUTO_INCREMENT,  
- nome_curso VARCHAR(150) NOT NULL,
- tipo_curso ENUM('Técnico', 'Qualificação', 'Especialização') NOT NULL,
- cargahr_curso INT NOT NULL,
- idstatus_curso INT NOT NULL
+ idstatus_curso INT PRIMARY KEY AUTO_INCREMENT,
+ nome_stcurso ENUM('Ativo', 'Inativo', 'Em elaboração') NOT NULL  
 ); 
 
-
-CREATE TABLE grade_curricular 
+CREATE TABLE turno 
 ( 
- idgrade_curricular INT PRIMARY KEY AUTO_INCREMENT,  
- status_grade ENUM('Ativo', 'Inativo') NOT NULL,
- dt_vigencia DATE NOT NULL,
- idcomponente INT NOT NULL,
- idcurso INT NOT NULL
+ idturno INT PRIMARY KEY AUTO_INCREMENT,
+ nome_turno ENUM('Matutino', 'Vespertino', 'Noturno') NOT NULL 
+); 
+
+CREATE TABLE status_turma 
+( 
+ idstatus_turma INT PRIMARY KEY AUTO_INCREMENT,
+ nome_stturma ENUM('Aberta', 'Concluída', 'Cancelada') NOT NULL
 ); 
 
 CREATE TABLE componente 
@@ -78,6 +46,84 @@ CREATE TABLE componente
  habilidades TEXT
 ); 
 
+CREATE TABLE status_alocacao 
+( 
+ idstatus_alocacao INT PRIMARY KEY AUTO_INCREMENT,
+ nome_stalocacao ENUM('Ativa', 'Encerrada', 'Cancelada') NOT NULL  
+); 
+
+CREATE TABLE status_candidatura 
+( 
+ idstatus_candidatura INT PRIMARY KEY AUTO_INCREMENT,  
+ nome_statuscand ENUM('Pendente', 'Aceita', 'Recusada') NOT NULL  
+); 
+
+-- Segundo: criar tabelas que dependem das anteriores
+CREATE TABLE usuario 
+( 
+ idusuario INT PRIMARY KEY AUTO_INCREMENT,  
+ idgrupo_acesso INT NOT NULL,  
+ user_login VARCHAR(100) UNIQUE NOT NULL,
+ senha VARCHAR(12) NOT NULL,
+ dt_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+); 
+
+CREATE TABLE curso 
+( 
+ idcurso INT PRIMARY KEY AUTO_INCREMENT,  
+ nome_curso VARCHAR(150) NOT NULL,
+ tipo_curso ENUM('Técnico', 'Qualificação', 'Especialização') NOT NULL,
+ cargahr_curso INT NOT NULL,
+ idstatus_curso INT NOT NULL
+); 
+
+-- Terceiro: criar tabelas que dependem de usuario
+CREATE TABLE professor 
+( 
+ idprofessor INT PRIMARY KEY AUTO_INCREMENT,  
+ nome_prof VARCHAR(150) NOT NULL,
+ cpf CHAR(14) UNIQUE NOT NULL,
+ telefone VARCHAR(15),
+ dt_nascimento DATE,
+ email_prof VARCHAR(100) UNIQUE,
+ idusuario INT NOT NULL
+); 
+
+CREATE TABLE coordenador 
+( 
+ idcoordenador INT PRIMARY KEY AUTO_INCREMENT, 
+ idusuario INT NOT NULL 
+); 
+
+CREATE TABLE administrador 
+( 
+ idadmin INT PRIMARY KEY AUTO_INCREMENT,  
+ idusuario INT NOT NULL 
+);
+
+-- Quarto: criar tabelas que dependem de curso e componente
+CREATE TABLE grade_curricular 
+( 
+ idgrade_curricular INT PRIMARY KEY AUTO_INCREMENT,  
+ status_grade ENUM('Ativo', 'Inativo') NOT NULL,
+ dt_vigencia DATE NOT NULL,
+ idcomponente INT NOT NULL,
+ idcurso INT NOT NULL
+); 
+
+-- Quinto: criar tabelas que dependem de professor
+CREATE TABLE formacao_professor 
+( 
+ idformacao INT PRIMARY KEY AUTO_INCREMENT,
+ nome_formacao VARCHAR(150) NOT NULL,
+ tipo_formacao ENUM('Graduação', 'Especialização', 'Mestrado', 'Doutorado') NOT NULL,
+ instituicao VARCHAR(150) NOT NULL,
+ ano_conclusao YEAR NOT NULL,
+ cargahr_formacao INT NOT NULL,
+ idprofessor INT NOT NULL
+); 
+
+-- Sexto: criar turma (depende de várias tabelas)
 CREATE TABLE turma 
 ( 
  idturma INT PRIMARY KEY AUTO_INCREMENT,
@@ -90,37 +136,7 @@ CREATE TABLE turma
  idcurso INT NOT NULL
 ); 
 
-CREATE TABLE turno 
-( 
- idturno INT PRIMARY KEY AUTO_INCREMENT,
- nome_turno ENUM('Matutino', 'Vespertino', 'Noturno') NOT NULL 
-); 
-
-CREATE TABLE status_curso 
-( 
- idstatus_curso INT PRIMARY KEY AUTO_INCREMENT,
- nome_stcurso ENUM('Ativo', 'Inativo', 'Em elaboração') NOT NULL  
-); 
-
-CREATE TABLE status_turma 
-( 
- idstatus_turma INT PRIMARY KEY AUTO_INCREMENT,
- nome_stturma ENUM('Aberta', 'Concluída', 'Cancelada') NOT NULL
-); 
-
-
-
-CREATE TABLE formacao_professor 
-( 
- idformacao INT PRIMARY KEY AUTO_INCREMENT,
- nome_formacao VARCHAR(150) NOT NULL,
- tipo_formacao ENUM('Graduação', 'Especialização', 'Mestrado', 'Doutorado') NOT NULL,
- instituicao VARCHAR(150) NOT NULL,
- ano_conclusao YEAR NOT NULL,
- cargahr_formacao INT NOT NULL,
- idprofessor INT NOT NULL
-); 
-
+-- Sétimo: criar tabelas que dependem de turma e professor
 CREATE TABLE alocacao 
 ( 
  idalocacao INT PRIMARY KEY AUTO_INCREMENT,
@@ -130,12 +146,6 @@ CREATE TABLE alocacao
  idturma INT NOT NULL,
  periodo_inicio DATE,
  periodo_fim DATE
-); 
-
-CREATE TABLE status_alocacao 
-( 
- idstatus_alocacao INT PRIMARY KEY AUTO_INCREMENT,
- nome_stalocacao ENUM('Ativa', 'Encerrada', 'Cancelada') NOT NULL  
 ); 
 
 CREATE TABLE candidatura 
@@ -148,12 +158,7 @@ CREATE TABLE candidatura
  idturma INT NOT NULL
 ); 
 
-CREATE TABLE status_candidatura 
-( 
- idstatus_candidatura INT PRIMARY KEY AUTO_INCREMENT,  
- nome_statuscand ENUM('Pendente', 'Aceita', 'Recusada') NOT NULL  
-); 
-
+-- Por último: adicionar as chaves estrangeiras
 ALTER TABLE professor ADD FOREIGN KEY(idusuario) REFERENCES usuario (idusuario);
 ALTER TABLE coordenador ADD FOREIGN KEY(idusuario) REFERENCES usuario (idusuario);
 ALTER TABLE administrador ADD FOREIGN KEY(idusuario) REFERENCES usuario (idusuario);
@@ -171,7 +176,6 @@ ALTER TABLE alocacao ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofes
 ALTER TABLE alocacao ADD FOREIGN KEY(idturma) REFERENCES turma (idturma);
 ALTER TABLE candidatura ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofessor);
 ALTER TABLE candidatura ADD FOREIGN KEY(idstatus_candidatura) REFERENCES status_candidatura (idstatus_candidatura);
-
 -- Inserir grupo de acesso específico para coordenação (se não existir)
 INSERT INTO grupo_acesso (nome_grupo, desc_grupo) 
 SELECT 'Coordenacao', 'Acesso exclusivo à área de coordenação'
