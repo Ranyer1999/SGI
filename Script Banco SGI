@@ -181,6 +181,13 @@ INSERT INTO grupo_acesso (nome_grupo, desc_grupo)
 SELECT 'Coordenacao', 'Acesso exclusivo à área de coordenação'
 WHERE NOT EXISTS (SELECT 1 FROM grupo_acesso WHERE nome_grupo = 'Coordenacao');
 
+ALTER TABLE coordenacao ADD COLUMN nome_coord VARCHAR(150) NOT NULL;
+ALTER TABLE coordenador ADD COLUMN nome_coord VARCHAR(150) NOT NULL;
+ALTER TABLE coordenador ADD COLUMN cpf_coord CHAR(14) UNIQUE NOT NULL;
+ALTER TABLE coordenador ADD COLUMN email_coord VARCHAR(100) UNIQUE;
+ALTER TABLE coordenador ADD COLUMN telefone_coord VARCHAR (15);
+SELECT * FROM coordenador;
+
 -- Inserir usuário com acesso exclusivo à coordenação
 INSERT INTO usuario (idgrupo_acesso, user_login, senha, dt_criacao) 
 VALUES (
