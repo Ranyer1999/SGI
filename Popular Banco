@@ -1,0 +1,206 @@
+-- Inserir dados na tabela status_curso
+INSERT INTO status_curso (nome_stcurso) VALUES 
+('Ativo'),
+('Inativo'),
+('Em elaboração');
+
+-- Inserir dados na tabela curso
+INSERT INTO curso (nome_curso, tipo_curso, cargahr_curso, idstatus_curso) VALUES 
+('Técnico em Informática', 'Técnico', 1200, 1),
+('Técnico em Administração', 'Técnico', 1000, 1),
+('Técnico em Enfermagem', 'Técnico', 1500, 1),
+('Qualificação em Assistente Administrativo', 'Qualificação', 200, 1),
+('Especialização em Gestão de Projetos', 'Especialização', 360, 1);
+
+-- Inserir dados na tabela turno
+INSERT INTO turno (nome_turno) VALUES 
+('Matutino'),
+('Vespertino'),
+('Noturno');
+
+-- Inserir dados na tabela status_turma
+INSERT INTO status_turma (nome_stturma) VALUES 
+('Aberta'),
+('Concluída'),
+('Cancelada');
+
+-- Inserir dados na tabela componente
+INSERT INTO componente (nome_componente, cargahr_comp, comp_socioemocional, base_conhecimentos, habilidades) VALUES 
+('Programação Web', 80, 'Trabalho em equipe, Resolução de problemas', 'Lógica de programação, HTML, CSS', 'Desenvolver sites responsivos'),
+('Banco de Dados', 60, 'Organização, Atenção aos detalhes', 'Modelagem de dados, SQL', 'Criar e manipular bancos de dados'),
+('Matemática Aplicada', 40, 'Raciocínio lógico, Persistência', 'Matemática básica, Álgebra', 'Resolver problemas matemáticos'),
+('Gestão de Projetos', 60, 'Liderança, Comunicação', 'Metodologias ágeis, PMBOK', 'Planejar e executar projetos'),
+('Língua Portuguesa', 40, 'Comunicação, Expressão', 'Gramática, Interpretação de texto', 'Redigir textos corretamente');
+
+-- Inserir dados na tabela grade_curricular
+INSERT INTO grade_curricular (status_grade, dt_vigencia, idcomponente, idcurso) VALUES 
+('Ativo', '2023-01-01', 1, 1),
+('Ativo', '2023-01-01', 2, 1),
+('Ativo', '2023-01-01', 3, 1),
+('Ativo', '2023-01-01', 1, 2),
+('Ativo', '2023-01-01', 4, 2),
+('Ativo', '2023-01-01', 5, 2),
+('Ativo', '2023-01-01', 3, 3),
+('Ativo', '2023-01-01', 5, 3),
+('Inativo', '2022-01-01', 1, 1),
+('Inativo', '2022-01-01', 2, 1);
+
+-- Inserir dados na tabela grupo_acesso
+INSERT INTO grupo_acesso (nome_grupo, desc_grupo) VALUES 
+('Coordenacao', 'Acesso exclusivo à área de coordenação'),
+('Professores', 'Acesso à área de professores'),
+('Administradores', 'Acesso completo ao sistema');
+
+-- Inserir dados na tabela usuario
+INSERT INTO usuario (idgrupo_acesso, user_login, senha, dt_criacao) VALUES 
+(1, 'coordenador@escola.com', 'coord123', NOW()),
+(2, 'professor.silva@escola.com', 'prof123', NOW()),
+(2, 'professor.oliveira@escola.com', 'prof123', NOW()),
+(2, 'professora.santos@escola.com', 'prof123', NOW()),
+(3, 'admin@escola.com', 'admin123', NOW());
+
+-- Inserir dados na tabela professor
+INSERT INTO professor (nome_prof, cpf, telefone, dt_nascimento, email_prof, idusuario) VALUES 
+('Carlos Silva', '123.456.789-00', '(11) 99999-1111', '1980-05-15', 'professor.silva@escola.com', 2),
+('Maria Oliveira', '987.654.321-00', '(11) 99999-2222', '1975-08-22', 'professor.oliveira@escola.com', 3),
+('Ana Santos', '111.222.333-44', '(11) 99999-3333', '1985-12-10', 'professora.santos@escola.com', 4);
+
+-- Inserir dados na tabela coordenador
+INSERT INTO coordenador (nome_coord, cpf_coord, email_coord, telefone_coord, idusuario) VALUES 
+('João Coordenador', '999.888.777-66', 'coordenador@escola.com', '(11) 8888-7777', 1);
+
+-- Inserir dados na tabela administrador
+INSERT INTO administrador (idusuario) VALUES (5);
+
+-- Inserir dados na tabela status_alocacao
+INSERT INTO status_alocacao (nome_stalocacao) VALUES 
+('Ativa'),
+('Encerrada'),
+('Cancelada');
+
+-- Inserir algumas turmas para teste
+INSERT INTO turma (nome_turma, dt_inicio, dt_fim, idstatus_turma, idturno, idgrade_curricular, idcurso) VALUES 
+('INFO-2023-1A', '2023-02-01', '2023-11-30', 1, 1, 1, 1),
+('ADM-2023-1B', '2023-02-01', '2023-11-30', 1, 2, 4, 2),
+('ENF-2023-1N', '2023-02-01', '2023-11-30', 1, 3, 7, 3);
+
+-- Inserir algumas alocações para exemplo
+INSERT INTO alocacao (dt_alocacao, idstatus_alocacao, idprofessor, idturma, periodo_inicio, periodo_fim) VALUES 
+(NOW(), 1, 1, 1, '2023-02-01', '2023-06-30'),
+(NOW(), 1, 2, 2, '2023-02-01', '2023-06-30'),
+(NOW(), 2, 3, 3, '2023-02-01', '2023-06-30');
+
+-- Popular todas as tabelas necessárias para o SGI
+
+-- 1. Tabelas básicas
+INSERT INTO status_curso (nome_stcurso) VALUES 
+('Ativo'), ('Inativo'), ('Em elaboração');
+
+INSERT INTO turno (nome_turno) VALUES 
+('Matutino'), ('Vespertino'), ('Noturno');
+
+INSERT INTO status_turma (nome_stturma) VALUES 
+('Aberta'), ('Concluída'), ('Cancelada');
+
+INSERT INTO status_alocacao (nome_stalocacao) VALUES 
+('Ativa'), ('Encerrada'), ('Cancelada');
+
+INSERT INTO status_candidatura (nome_statuscand) VALUES 
+('Pendente'), ('Aceita'), ('Recusada');
+
+-- 2. Cursos
+INSERT INTO curso (nome_curso, tipo_curso, cargahr_curso, idstatus_curso) VALUES 
+('Técnico em Informática', 'Técnico', 1200, 1),
+('Técnico em Administração', 'Técnico', 1000, 1),
+('Técnico em Enfermagem', 'Técnico', 1500, 1),
+('Técnico em Logística', 'Técnico', 1100, 1),
+('Qualificação em Assistente Administrativo', 'Qualificação', 200, 1),
+('Qualificação em Auxiliar de Enfermagem', 'Qualificação', 300, 1),
+('Especialização em Gestão de Projetos', 'Especialização', 360, 1),
+('Especialização em Desenvolvimento Web', 'Especialização', 400, 1);
+
+-- 3. Componentes curriculares
+INSERT INTO componente (nome_componente, cargahr_comp, comp_socioemocional, base_conhecimentos, habilidades) VALUES 
+('Programação Web', 80, 'Trabalho em equipe, Resolução de problemas', 'Lógica de programação, HTML, CSS', 'Desenvolver sites responsivos'),
+('Banco de Dados', 60, 'Organização, Atenção aos detalhes', 'Modelagem de dados, SQL', 'Criar e manipular bancos de dados'),
+('Matemática Aplicada', 40, 'Raciocínio lógico, Persistência', 'Matemática básica, Álgebra', 'Resolver problemas matemáticos'),
+('Gestão de Projetos', 60, 'Liderança, Comunicação', 'Metodologias ágeis, PMBOK', 'Planejar e executar projetos'),
+('Língua Portuguesa', 40, 'Comunicação, Expressão', 'Gramática, Interpretação de texto', 'Redigir textos corretamente'),
+('Anatomia Humana', 80, 'Observação, Detalhismo', 'Biologia, Ciências', 'Identificar estruturas anatômicas'),
+('Logística Empresarial', 60, 'Organização, Planejamento', 'Administração, Matemática', 'Otimizar processos logísticos'),
+('Redes de Computadores', 70, 'Resolução de problemas, Paciência', 'Conceitos de rede, Protocolos', 'Configurar redes locais');
+
+-- 4. Grades curriculares
+INSERT INTO grade_curricular (status_grade, dt_vigencia, idcomponente, idcurso) VALUES 
+-- Grades para Informática
+('Ativo', '2023-01-01', 1, 1),
+('Ativo', '2023-01-01', 2, 1),
+('Ativo', '2023-01-01', 3, 1),
+-- Grades para Administração
+('Ativo', '2023-01-01', 4, 2),
+('Ativo', '2023-01-01', 5, 2),
+('Ativo', '2023-01-01', 3, 2),
+-- Grades para Enfermagem
+('Ativo', '2023-01-01', 6, 3),
+('Ativo', '2023-01-01', 3, 3),
+('Ativo', '2023-01-01', 5, 3),
+-- Grades para Logística
+('Ativo', '2023-01-01', 7, 4),
+('Ativo', '2023-01-01', 4, 4),
+('Ativo', '2023-01-01', 3, 4);
+
+-- 5. Grupos de acesso e usuários
+INSERT INTO grupo_acesso (nome_grupo, desc_grupo) VALUES 
+('Coordenacao', 'Acesso exclusivo à área de coordenação'),
+('Professores', 'Acesso à área de professores'),
+('Administradores', 'Acesso completo ao sistema');
+
+INSERT INTO usuario (idgrupo_acesso, user_login, senha, dt_criacao) VALUES 
+-- Coordenadores
+(1, 'coordenador1@escola.com', 'coord123', NOW()),
+(1, 'coordenador2@escola.com', 'coord123', NOW()),
+-- Professores
+(2, 'professor.silva@escola.com', 'prof123', NOW()),
+(2, 'professor.oliveira@escola.com', 'prof123', NOW()),
+(2, 'professora.santos@escola.com', 'prof123', NOW()),
+(2, 'professor.costa@escola.com', 'prof123', NOW()),
+(2, 'professora.lima@escola.com', 'prof123', NOW()),
+-- Administradores
+(3, 'admin@escola.com', 'admin123', NOW());
+
+-- 6. Professores
+INSERT INTO professor (nome_prof, cpf, telefone, dt_nascimento, email_prof, idusuario) VALUES 
+('Carlos Silva', '123.456.789-00', '(11) 99999-1111', '1980-05-15', 'professor.silva@escola.com', 3),
+('Maria Oliveira', '987.654.321-00', '(11) 99999-2222', '1975-08-22', 'professor.oliveira@escola.com', 4),
+('Ana Santos', '111.222.333-44', '(11) 99999-3333', '1985-12-10', 'professora.santos@escola.com', 5),
+('Pedro Costa', '555.666.777-88', '(11) 99999-4444', '1978-03-30', 'professor.costa@escola.com', 6),
+('Juliana Lima', '999.888.777-66', '(11) 99999-5555', '1982-07-18', 'professora.lima@escola.com', 7);
+
+-- 7. Coordenadores
+INSERT INTO coordenador (nome_coord, cpf_coord, email_coord, telefone_coord, idusuario) VALUES 
+('João Coordenador', '111.222.333-44', 'coordenador1@escola.com', '(11) 8888-7777', 1),
+('Maria Coordenadora', '555.666.777-88', 'coordenador2@escola.com', '(11) 8888-9999', 2);
+
+-- 8. Administrador
+INSERT INTO administrador (idusuario) VALUES (8);
+
+-- 9. Turmas de exemplo
+INSERT INTO turma (nome_turma, dt_inicio, dt_fim, idstatus_turma, idturno, idgrade_curricular, idcurso) VALUES 
+-- Turmas de Informática
+('INFO-2023-1A', '2023-02-01', '2023-11-30', 1, 1, 1, 1),
+('INFO-2023-1B', '2023-02-01', '2023-11-30', 1, 2, 2, 1),
+('INFO-2023-1N', '2023-02-01', '2023-11-30', 1, 3, 3, 1),
+-- Turmas de Administração
+('ADM-2023-1A', '2023-02-01', '2023-11-30', 1, 1, 4, 2),
+('ADM-2023-1B', '2023-02-01', '2023-11-30', 1, 2, 5, 2),
+-- Turmas de Enfermagem
+('ENF-2023-1M', '2023-02-01', '2023-11-30', 1, 1, 7, 3),
+('ENF-2023-1N', '2023-02-01', '2023-11-30', 1, 3, 8, 3);
+
+-- 10. Alocações de exemplo
+INSERT INTO alocacao (dt_alocacao, idstatus_alocacao, idprofessor, idturma, periodo_inicio, periodo_fim) VALUES 
+(NOW(), 1, 1, 1, '2023-02-01', '2023-06-30'),  -- Carlos Silva na INFO-2023-1A
+(NOW(), 1, 2, 4, '2023-02-01', '2023-06-30'),  -- Maria Oliveira na ADM-2023-1A
+(NOW(), 1, 3, 6, '2023-02-01', '2023-06-30'),  -- Ana Santos na ENF-2023-1M
+(NOW(), 2, 4, 2, '2023-02-01', '2023-06-30'),  -- Pedro Costa na INFO-2023-1B (encerrada)
+(NOW(), 1, 5, 5, '2023-02-01', '2023-06-30');  -- Juliana Lima na ADM-2023-1B
