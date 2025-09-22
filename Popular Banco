@@ -51,19 +51,7 @@ INSERT INTO grupo_acesso (nome_grupo, desc_grupo) VALUES
 ('Professores', 'Acesso à área de professores'),
 ('Administradores', 'Acesso completo ao sistema');
 
--- Inserir dados na tabela usuario
-INSERT INTO usuario (idgrupo_acesso, user_login, senha, dt_criacao) VALUES 
-(1, 'coordenador@escola.com', 'coord123', NOW()),
-(2, 'professor.silva@escola.com', 'prof123', NOW()),
-(2, 'professor.oliveira@escola.com', 'prof123', NOW()),
-(2, 'professora.santos@escola.com', 'prof123', NOW()),
-(3, 'admin@escola.com', 'admin123', NOW());
 
--- Inserir dados na tabela professor
-INSERT INTO professor (nome_prof, cpf, telefone, dt_nascimento, email_prof, idusuario) VALUES 
-('Carlos Silva', '123.456.789-00', '(11) 99999-1111', '1980-05-15', 'professor.silva@escola.com', 2),
-('Maria Oliveira', '987.654.321-00', '(11) 99999-2222', '1975-08-22', 'professor.oliveira@escola.com', 3),
-('Ana Santos', '111.222.333-44', '(11) 99999-3333', '1985-12-10', 'professora.santos@escola.com', 4);
 
 -- Inserir dados na tabela coordenador
 INSERT INTO coordenador (nome_coord, cpf_coord, email_coord, telefone_coord, idusuario) VALUES 
@@ -204,3 +192,26 @@ INSERT INTO alocacao (dt_alocacao, idstatus_alocacao, idprofessor, idturma, peri
 (NOW(), 1, 3, 6, '2023-02-01', '2023-06-30'),  -- Ana Santos na ENF-2023-1M
 (NOW(), 2, 4, 2, '2023-02-01', '2023-06-30'),  -- Pedro Costa na INFO-2023-1B (encerrada)
 (NOW(), 1, 5, 5, '2023-02-01', '2023-06-30');  -- Juliana Lima na ADM-2023-1B
+
+DROP TABLE candidatura;
+DROP TABLE status_candidatura;
+CREATE TABLE candidatura 
+( 
+ idcandidatura INT PRIMARY KEY AUTO_INCREMENT,
+ dt_candidatura DATE NOT NULL,
+ hora_candidatura TIME NOT NULL,
+ idprofessor INT NOT NULL,
+ idstatus_candidatura INT NOT NULL,
+ idturma INT NOT NULL
+);
+
+CREATE TABLE status_candidatura 
+( 
+ idstatus_candidatura INT PRIMARY KEY AUTO_INCREMENT, 
+ nome_statuscand ENUM('Pendente', 'Aceita', 'Recusada') NOT NULL  
+); 
+
+DROP TABLE candidatura;
+DROP TABLE status_candidatura;
+
+DROP DATABASE IF EXISTS sgibank;
