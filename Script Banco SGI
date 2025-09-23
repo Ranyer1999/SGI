@@ -144,7 +144,7 @@ CREATE TABLE alocacao
  idstatus_alocacao INT NOT NULL,
  idprofessor INT NOT NULL, 
  idturma INT NOT NULL,
- idcomponente INT NOT NUL,
+ idcomponente INT NOT NULL,
  periodo_inicio DATE,
  periodo_fim DATE
 ); 
@@ -175,7 +175,7 @@ ALTER TABLE formacao_professor ADD FOREIGN KEY(idprofessor) REFERENCES professor
 ALTER TABLE alocacao ADD FOREIGN KEY(idstatus_alocacao) REFERENCES status_alocacao (idstatus_alocacao);
 ALTER TABLE alocacao ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofessor);
 ALTER TABLE alocacao ADD FOREIGN KEY(idturma) REFERENCES turma (idturma);
-ALTER TABLE alocacao ADD FOREIGN KEY(idcomponente) REFERENCES componente (idcomponente)
+ALTER TABLE alocacao ADD FOREIGN KEY(idcomponente) REFERENCES componente (idcomponente);
 ALTER TABLE candidatura ADD FOREIGN KEY(idprofessor) REFERENCES professor (idprofessor);
 ALTER TABLE candidatura ADD FOREIGN KEY(idstatus_candidatura) REFERENCES status_candidatura (idstatus_candidatura);
 
